@@ -1,6 +1,7 @@
 #include "myStatisticFunctions.hpp"
 #include <iostream>
 using namespace std;
+
 int main(int argc, char* argv[]){	//is argc and argv neccessary?
   //create an array
   unsigned int size = 0;
@@ -24,13 +25,19 @@ int main(int argc, char* argv[]){	//is argc and argv neccessary?
         continue;
     }
   }
-  //
+  //print this array
   for (unsigned int i =0; i<size;i++)
-	  cout<<ptr[i]<<endl;
+	  cout<<i+1<<", "<<ptr[i]<<endl;
   
-  cout<<mean(ptr,size)<<endl;
+  //print statistic
+  cout<<"------------------------------\n";
   
-  //delete the array
+  //print the mean value
+  cout<<"mean: "<<mean(ptr,size)<<endl;
+  cout<<"median: "<<median(ptr,size)<<endl;
+  cout<<"variance: "<<var(ptr,size)<<endl;
+  cout<<"standard deviation: "<<stdDeviation(ptr,size)<<endl;
+  //delete the array, free heap memory
   delete[] ptr;
   ptr = nullptr;
 }
