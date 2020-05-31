@@ -2,6 +2,7 @@
 // developed by Ziyu Liu,Yu Dong
 // Date: 30/05/2020
 #include <algorithm>
+#include <iostream>
 #include <cmath>
 #include <vector>
 
@@ -144,7 +145,7 @@ double quantile(const vector<T> &data, unsigned int len, const unsigned int p) {
   k = floor(len * p / 100.0);
   // judge if len*p% is an integer
   if ((len * p / 100.0 - k) < 0.000000000000001) // integer
-    m = (copy[k - 1] + copy[k]) / 2;
+  m = (copy[k - 1] + copy[k]) / 2.0;
   else // not integer
     m = copy[k];
 
