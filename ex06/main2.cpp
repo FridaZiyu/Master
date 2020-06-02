@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-int main(int argc, char *argv[]) { // is argc and argv neccessary?
+int main(int argc, char *argv[]) { 
   // create a std::vector
   unsigned int size = 0;
   vector<int> iVec;
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) { // is argc and argv neccessary?
         continue;
     }
   }
-  // input p
+  // input p (0-100)
   unsigned int p = 0;
   cout << "Please input p to calculate p%-quantile: " << endl;
   while (!(cin >> p) || p <= 0) {
