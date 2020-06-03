@@ -102,7 +102,7 @@ int mean(const vector<int> &data, const unsigned int &len) {
   for (unsigned int i = 0; i < len; i++)
     m += data[i];
   m = m / len;
-  cout << "double mean:" << m << endl;
+  cout << "(double mean:" << m << ") ";
   return int(m);
 }
 
