@@ -3,12 +3,12 @@
 // Date: 03/06/2020
 #include <algorithm>
 #include <cmath>
-#include <vector>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 // function declarations
-//read input data
+// read input data
 template <typename T> void writeData(vector<T> &data, unsigned int &len);
 
 // mean
@@ -17,9 +17,8 @@ template <typename T> double mean(const T *dataPtr, const unsigned int &len);
 // (ii)via std::vector
 template <typename T>
 double mean(const vector<T> &data, const unsigned int &len);
-//special mean function for vector<int> 
+// special mean function for vector<int>
 int mean(const vector<int> &data, const unsigned int &len);
-
 
 // variance type: 1) sample variance; 2) population variance
 // (i)via array pointer
@@ -62,8 +61,8 @@ double median(const vector<T> &data, const unsigned int &len);
 /*************************************************************************/
 
 // function definitions
-template <typename T> void writeData(vector<T> &data, unsigned int &len){
-  //read from stdandard input to the vector
+template <typename T> void writeData(vector<T> &data, unsigned int &len) {
+  // read from stdandard input to the vector
   cout << "Please input the length of array: \n";
   while (!(cin >> len) || len <= 0) {
     cerr << "Length should be a positive integer. \n";
@@ -90,20 +89,21 @@ template <typename T> double mean(const T *dataPtr, const unsigned int &len) {
   return (m / len);
 }
 
-template <typename T> double mean(const vector<T> &data, const unsigned int &len) {
+template <typename T>
+double mean(const vector<T> &data, const unsigned int &len) {
   double m = 0;
   for (unsigned int i = 0; i < len; i++)
     m += data[i];
   return (m / len);
 }
-//spesialization for vector<int>
-int mean(const vector<int> &data, const unsigned int &len){
-	double m = 0;
-	for (unsigned int i = 0; i < len; i++)
-		m += data[i];
-	m = m/len;
-	cout<< "double mean:" << m <<endl;
-	return int(m);
+// spesialization for vector<int>
+int mean(const vector<int> &data, const unsigned int &len) {
+  double m = 0;
+  for (unsigned int i = 0; i < len; i++)
+    m += data[i];
+  m = m / len;
+  cout << "double mean:" << m << endl;
+  return int(m);
 }
 
 template <typename T>
@@ -183,7 +183,7 @@ double quantile(const vector<T> &data, unsigned int len, const unsigned int p) {
   k = floor(len * p / 100.0);
   // judge if len*p% is an integer
   if ((len * p / 100.0 - k) < 10e-5) // integer
-  m = (copy[k - 1] + copy[k]) / 2.0;
+    m = (copy[k - 1] + copy[k]) / 2.0;
   else // not integer
     m = copy[k];
 
