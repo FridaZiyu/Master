@@ -48,8 +48,22 @@ double Matrix::min() {
   return (*minimum);
 }
 
-// double Matrix::max(int& r, int& c)
-// double Matrix::min(int& r, int& c)
+double Matrix::max(int &r, int &c) {
+  auto maximum = std::max_element(_data.begin(), _data.end());
+  auto loc = std::distance(_data.begin(), maximum);
+  int R = (loc + 1) % _R;
+  int C = (loc + 1) / _R + 1;
+  cout << "at row " << R << " column " << C << " : ";
+  return (*maximum);
+}
+double Matrix::min(int &r, int &c) {
+  auto minimum = std::min_element(_data.begin(), _data.end());
+  auto loc = std::distance(_data.begin(), minimum);
+  int R = (loc + 1) % _R;
+  int C = (loc + 1) / _R + 1;
+  cout << "at row " << R << " column " << C << " : ";
+  return (*minimum);
+}
 
 void Matrix::print() {
   cout << "[";
@@ -61,5 +75,6 @@ void Matrix::print() {
   }
   for (int j = 0; j < _C - 1; j++)
     cout << _data[_R * (j + 1) - 1] << " ";
-  cout << _data[_R * _C - 1] << "]; % "<<"dim "<<_R<<"*"<<_C<<"\n";
+  cout << _data[_R * _C - 1] << "]; % "
+       << "dim " << _R << "*" << _C << "\n";
 }

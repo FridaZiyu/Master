@@ -15,8 +15,8 @@ public:
   void set(int r, int c, double x);
   double max();
   double min();
-  // double max(int& r, int& c);
-  // double min(int& r, int& c);
+  double max(int &r, int &c);
+  double min(int &r, int &c);
   void print();
 
 private:
