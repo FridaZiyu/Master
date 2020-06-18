@@ -48,14 +48,14 @@ double Matrix::min() const {
   return (*minimum);
 }
 
-double Matrix::max(int &r, int &c) {
+double Matrix::max(int &r, int &c) const{
   auto maximum = std::max_element(_data.begin(), _data.end());
   auto loc = std::distance(_data.begin(), maximum);
   r = loc % _R;
   c = loc / _R;
   return (*maximum);
 }
-double Matrix::min(int &r, int &c) {
+double Matrix::min(int &r, int &c) const{
   auto minimum = std::min_element(_data.begin(), _data.end());
   auto loc = std::distance(_data.begin(), minimum);
   r = loc % _R;
@@ -63,7 +63,7 @@ double Matrix::min(int &r, int &c) {
   return (*minimum);
 }
 
-void Matrix::print() const {
+void Matrix::print() const{  
   cout << "[";
   for (int i = 0; i < _R - 1; i++) {
     for (int j = 0; j < _C - 1; j++)
