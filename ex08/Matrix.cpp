@@ -48,20 +48,18 @@ double Matrix::min() const {
   return (*minimum);
 }
 
-double Matrix::max(const int &r, const int &c) const {
+double Matrix::max(int &r, int &c) {
   auto maximum = std::max_element(_data.begin(), _data.end());
   auto loc = std::distance(_data.begin(), maximum);
-  int R = loc % _R;
-  int C = loc / _R;
-  cout << "at row " << R << " column " << C << " : ";
+  r = loc % _R;
+  c = loc / _R;
   return (*maximum);
 }
-double Matrix::min(const int &r, const int &c) const {
+double Matrix::min(int &r, int &c) {
   auto minimum = std::min_element(_data.begin(), _data.end());
   auto loc = std::distance(_data.begin(), minimum);
-  int R = loc % _R;
-  int C = loc / _R;
-  cout << "at row " << R << " column " << C << " : ";
+  r = loc % _R;
+  c = loc / _R;
   return (*minimum);
 }
 

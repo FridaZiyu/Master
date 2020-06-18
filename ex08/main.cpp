@@ -26,7 +26,9 @@ int main() {
   cout << "The largest entry of Matrix C is " << C.max() << "\n";
   int C_r = 8;
   int C_c = 2;
-  cout << "The smallest entry of Matrix C is " << C.min(C_r, C_c) << "\n";
+  auto min = C.min(C_r, C_c);
+  cout << "The smallest entry of Matrix C is at row " << C_r << " column "
+       << C_c << " : " << min << "\n";
   cout << "------------------------\n";
   // resize matrix C and print it
   C.resize(4, 4);
