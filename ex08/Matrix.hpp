@@ -20,7 +20,7 @@ public:
   void print() const;
 
 private:
-  std::vector<double> _data;
   int _R = 0;
   int _C = 0;
+  std::vector<double> _data;
 };
