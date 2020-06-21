@@ -28,8 +28,13 @@ int main() {
   //cout <<"Size:" << sizeof(A) <<';' << Matrix::totalMemory() <<'\n';
   {
 	  Matrix B(4,4, m);
-	  B.print();
+	  B.AsciiRead("test.txt");
+	  B.AsciiWrite("asc.txt");
   }
+  A.BinaryWrite("bi.txt");
+  Matrix D;
+  D.BinaryRead("bi.txt");
+  D.print();
   return 0;
 }
 

@@ -25,7 +25,7 @@ public:
   void AsciiRead(const std::string filename);
   void AsciiWrite(const std::string filename)const;
   void BinaryRead(const std::string filename);
-  void BinaryWrite(const std::string filename)const;
+  void BinaryWrite(const std::string filename);
   void print() const;  //print
   //static func.
   static int totalMemory();
