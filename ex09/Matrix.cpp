@@ -1,19 +1,58 @@
 #include "Matrix.hpp"
 #include <algorithm>
 #include <vector>
-
+#include <stream>
+#include <fstream>
 using std::cout;
+using std::string;
+Matrix::Matrix(){
+	total_m = total_m + _data.size();
+	cout<< "creat empty matrix\n";
+	totalMemory();
+}
 Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
-  cout << "INFO::Constr. 'Matrix::Matrix(rows,columns)'\n";
+  //cout << "INFO::Constr. 'Matrix::Matrix(rows,columns)'\n";
   _data.resize(_R * _C);
   std::fill(_data.begin(), _data.end(), 0);
+  total_m = total_m + _data.size();
+  totalMemory();
 }
 
 Matrix::Matrix(int rows, int columns, const std::vector<double> &data)
     : _R(rows), _C(columns), _data(data) {
-  cout << "INFO::Constr. 'Matrix::Matrix(rows,columns,data)'\n";
+  //cout << "INFO::Constr. 'Matrix::Matrix(rows,columns,data)'\n";
+  total_m = total_m + _data.size();
+	totalMemory();
 }
 
+//copy constructor
+Matrix::Matrix(const Matrix& m){
+	_R = m._R;
+	_C = m._C;
+	_data = m._data;
+	total_m = total_m + _data.size();
+	totalMemory();
+}
+// '=' operator
+Matrix& Matrix::operator=(const Matrix& m){
+	cout << "INFO:: Custom operator '=' is using\n";
+	total_m = total_m - _data.size();
+	
+	_R = m._R;
+	_C = m._C;
+	_data = m._data;
+	
+	total_m = total_m + _data.size();
+	totalMemory();
+	
+	return (*this);
+}
+
+//Deconstructor
+Matrix::~Matrix(){
+	total_m = total_m - _data.size();
+	totalMemory();
+}
 void Matrix::resize(int rows, int columns) {
   _R = rows;
   _C = columns;
@@ -62,7 +101,21 @@ double Matrix::min(int &r, int &c) const{
   c = loc / _R;
   return (*minimum);
 }
-
+//IO
+void Matrix::AsciiRead(const string filename){
+	//calculate total_m
+	
+}
+void Matrix::AsciiWrite(const string filename)const{
+	
+}
+void Matrix::BinaryRead(const string filename){
+	//calculate total_m
+	
+}
+void Matrix::BinaryWrite(const string filename)const{
+	
+}
 void Matrix::print() const{  
   cout << "[";
   for (int i = 0; i < _R - 1; i++) {
@@ -76,3 +129,10 @@ void Matrix::print() const{
   cout << _data[_R * _C - 1] << "]; % "
        << "dim " << _R << "*" << _C << "\n";
 }
+
+int Matrix::total_m = 0;
+int Matrix::totalMemory(){
+	cout<< "Current memory usage: " << total_m << " Byte\n";
+	return total_m;
+}
+
