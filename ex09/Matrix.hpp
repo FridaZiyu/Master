@@ -23,7 +23,7 @@ public:
   double min(int &r, int &c) const;  
   //IO
   void AsciiRead(const std::string filename);
-  void AsciiWrite(const std::string filename)const;
+  void AsciiWrite(const std::string filename);
   void BinaryRead(const std::string filename);
   void BinaryWrite(const std::string filename);
   void print() const;  //print

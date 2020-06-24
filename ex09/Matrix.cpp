@@ -7,12 +7,12 @@
 using std::cout;
 using std::string;
 Matrix::Matrix(){
-	total_m = total_m + _data.size() * sizeof(_data[0]);
-	cout<< "creat empty matrix\n";
+	cout<< "INFO::Constr. Empty Matrix\n";
+	total_m = total_m + _data.size() * sizeof(_data[0]);	
 	totalMemory();
 }
 Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
-  //cout << "INFO::Constr. 'Matrix::Matrix(rows,columns)'\n";
+  cout << "INFO::Constr. Empty Matrix with size (" << rows <<','<< columns << ")\n";
   _data.resize(_R * _C);
   std::fill(_data.begin(), _data.end(), 0);
   total_m = total_m + _data.size() * sizeof(_data[0]);
@@ -21,7 +21,7 @@ Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
 
 Matrix::Matrix(int rows, int columns, const std::vector<double> &data)
     : _R(rows), _C(columns), _data(data) {
-  //cout << "INFO::Constr. 'Matrix::Matrix(rows,columns,data)'\n";
+  cout << "INFO::Constr. A Matrix with size (" << rows <<','<< columns << ")\n";
   total_m = total_m + _data.size() * sizeof(_data[0]);
 	totalMemory();
 }
@@ -31,12 +31,13 @@ Matrix::Matrix(const Matrix& m){
 	_R = m._R;
 	_C = m._C;
 	_data = m._data;
+	cout << "INFO::Copy Constr. Copy a Matrix with size (" << _R <<','<< _C << ")\n";
 	total_m = total_m + _data.size() * sizeof(_data[0]);
 	totalMemory();
 }
 // '=' operator
 Matrix& Matrix::operator=(const Matrix& m){
-	cout << "INFO:: Custom operator '=' is using\n";
+	cout << "INFO::Custom operator '='. Copy a Matrix with size (" << m._R <<','<< m._C << ")\n";
 	total_m = total_m - _data.size() * sizeof(_data[0]);
 	
 	_R = m._R;
@@ -118,12 +119,11 @@ void Matrix::AsciiRead(const string filename){
 		in >>_data.at(i);
 		i++;
 	}
-	in.close();
-	
+	cout << "INFO::AsciiRead. Read a Matrix(" << _R <<','<< _C << ") from file.\n";
 	total_m = total_m + _data.size() * sizeof(_data[0]);
 	totalMemory();
 }
-void Matrix::AsciiWrite(const string filename)const{
+void Matrix::AsciiWrite(const string filename){
 	std::ofstream out(filename);
 	if (!out.is_open()){
 		std::cerr<< "Error! Can't open file:"<< filename <<'\n';
@@ -131,11 +131,9 @@ void Matrix::AsciiWrite(const string filename)const{
 	}
 	out<<_R<<std::endl;
 	out<<_C<<std::endl;
-	//std::copy(_data.begin(),_data.end(),std::ostream_iterator <double>(out, '\n'));
 	out<< std::setprecision(10);
-	for (int i = 0; i < _R*_C; i++)
-		out<<_data.at(i)<<std::endl;
-	out.close();
+	std::copy(_data.begin(),_data.end(),std::ostream_iterator <double>(out, "\n"));
+	cout<< "INFO::AsciiWrite. Write Matrix in file '" << filename << "'\n";
 }
 void Matrix::BinaryRead(const string filename){
 	std::fstream in(filename, std::ios_base::in | std::ios_base::binary);
@@ -148,12 +146,12 @@ void Matrix::BinaryRead(const string filename){
 	in.read(reinterpret_cast <char*>(&_C), sizeof(_C));
 	_data.resize(_R * _C);
 	in.read(reinterpret_cast <char*>(&_data[0]), _data.size() * sizeof(_data[0]));
-	in.close();	
 	
+	cout << "INFO::BinaryRead. Read a Matrix(" << _R <<','<< _C << ") from file.\n";
 	total_m = total_m + _data.size()*sizeof(_data[0]);
 	totalMemory();
 }
-void Matrix::BinaryWrite(const string filename){
+void Matrix::BinaryWrite(const string filename) {
 	std::ofstream out(filename , std::ios_base::binary);
 	if (!out.is_open()){
 		std::cerr<< "Error! Can't open file:"<< filename <<'\n';
@@ -162,7 +160,7 @@ void Matrix::BinaryWrite(const string filename){
 	out.write(reinterpret_cast <char*>(&_R), sizeof(_R));
 	out.write(reinterpret_cast <char*>(&_C), sizeof(_C));
 	out.write(reinterpret_cast <char*>(&_data.front()),_data.size() * sizeof(_data.front()));
-	out.close();
+	cout<< "INFO::BinaryWrite. Write Matrix in file '" << filename << "'\n";
 }
 void Matrix::print() const{  
   cout << "[";
