@@ -7,7 +7,8 @@ int main() {
   std::cout << "===========================================\n";
   Matrix A;
   A.AsciiRead("test.txt");
-  Matrix B = A;
+  Matrix B;
+  B = A;
   B.AsciiWrite("out1.txt");
   Matrix C(B);
   B.set(0, 0, 5.5);
