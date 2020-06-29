@@ -7,13 +7,13 @@
 using std::cout;
 using std::string;
 Matrix::Matrix() {
-  cout << "INFO::Constr. Empty Matrix\n";
+  //cout << "INFO::Constr. Empty Matrix\n";
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
   totalMemory();
 }
 Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
-  cout << "INFO::Constr. Empty Matrix with size (" << rows << ',' << columns
-       << ")\n";
+  //cout << "INFO::Constr. Empty Matrix with size (" << rows << ',' << columns
+  //     << ")\n";
   _data.resize(_R * _C);
   std::fill(_data.begin(), _data.end(), 0);
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
@@ -22,8 +22,8 @@ Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
 
 Matrix::Matrix(int rows, int columns, const std::vector<double> &data)
     : _R(rows), _C(columns), _data(data) {
-  cout << "INFO::Constr. A Matrix with size (" << rows << ',' << columns
-       << ")\n";
+  //cout << "INFO::Constr. A Matrix with size (" << rows << ',' << columns
+  //     << ")\n";
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
   totalMemory();
 }
@@ -33,16 +33,15 @@ Matrix::Matrix(const Matrix &m) {
   _R = m._R;
   _C = m._C;
   _data = m._data;
-  cout << "INFO::Copy Constr. Copy a Matrix with size (" << _R << ',' << _C
-       << ")\n";
+  //cout << "INFO::Copy Constr. Copy a Matrix with size (" << _R << ',' << _C
+  //     << ")\n";
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
   totalMemory();
 }
 
 // operator=
 Matrix &Matrix::operator=(const Matrix &m) {
-  cout << "INFO::Custom operator '='. Copy a Matrix with size (" << m._R << ','
-       << m._C << ")\n";
+  //cout << "INFO::Custom operator '='. Copy a Matrix with size (" << m._R << ',' << m._C << ")\n";
   total_m = total_m - _data.size() * sizeof(_data[0]);
 
   _R = m._R;

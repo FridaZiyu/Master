@@ -28,5 +28,8 @@ int main() {
   cout << "Matrix E = D - B is:\n";
   E.print();
   cout << "===========================================\n";
+  cout << E(2,2) << "\n";
+  E.resize(3,2);
+  Matrix F = D - E;
   return 0;
 }
