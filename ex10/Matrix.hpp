@@ -22,9 +22,9 @@ public:
   Matrix &operator+=(double x);
   Matrix &operator-=(const Matrix& anotherMatrix);
   Matrix &operator-=(double x);
-  Matrix &operator*=(double x);
-  double operator()(int r, int c) const;
-  //void &operator()(int r, int c, double x);
+  Matrix &operator*=(double x);  
+  double operator()(int r,int c) const;
+  double &operator() (int r, int c);
   // member functions
   void resize(int rows, int columns);
   // get & set

@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iterator>
 #include <vector>
+#include <stdexcept>
 using std::cout;
 using std::string;
 Matrix::Matrix() {
@@ -56,10 +57,8 @@ Matrix &Matrix::operator=(const Matrix &m) {
 
 // operator+=
 Matrix &Matrix::operator+=(const Matrix &m2) {
-  if (_R != m2._R || _C != m2._C) {
-    std::cout << "Wrong! Only Matrices with same row and column could plus!\n";
-    return (*this);
-  }
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
   for (int i = 0; i < _R * _C; i++) {
     _data[i] += m2._data[i];
   }
@@ -75,10 +74,8 @@ Matrix &Matrix::operator+=(double x){
 
 // operator+
 Matrix Matrix::operator+(const Matrix &m2) const {
-  if (_R != m2._R || _C != m2._C) {
-    std::cout << "Wrong! Only Matrices with same row and column could plus!\n";
-    return (*this);
-  }
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
   Matrix m(*this);
   m += m2;
   return (m);
@@ -92,10 +89,8 @@ Matrix Matrix::operator+(double x) const{
 
 // operator-=
 Matrix &Matrix::operator-=(const Matrix &m2) {
-  if (_R != m2._R || _C != m2._C) {
-    std::cout << "Wrong! Only Matrices with same row and column could plus!\n";
-    return (*this);
-  }
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
   for (int i = 0; i < _R * _C; i++) {
     _data[i] -= m2._data[i];
   }
@@ -111,10 +106,8 @@ Matrix &Matrix::operator-=(double x){
 
 // operator-
 Matrix Matrix::operator-(const Matrix &m2) const {
-  if (_R != m2._R || _C != m2._C) {
-    std::cout << "Wrong! Only Matrices with same row and column could plus!\n";
-    return (*this);
-  }
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
   Matrix m(*this);
   m -= m2;
   return (m);
@@ -142,13 +135,17 @@ Matrix Matrix::operator*(double x) const{
 }
 
 // operator()
-double Matrix::operator()(int r, int c) const{
+double Matrix::operator()(int r,int c) const{
+  if (r > _R || c > _C)
+    throw std::logic_error("Index exceeds array bounds"); 
   return (_data[c*_R+r]);
 }
- 
-//void &Matrix::operator()(int r, int c, double x){
-//  _data[c*_R+r] = x;
-//}
+
+double &Matrix::operator()(int r, int c){
+  if (r > _R || c > _C)
+    throw std::logic_error("Index exceeds array bounds");
+  return (_data[c*_R+r]);
+}
 
 // Deconstructor
 Matrix::~Matrix() {
@@ -156,8 +153,8 @@ Matrix::~Matrix() {
   totalMemory();
 }
 void Matrix::resize(int rows, int columns) {
-  if (rows * columns != _R * _C) {
-    std::cerr << "Error! Change the total number of element in matrix.\n";
+  if (rows * columns != _R * _C) {   
+	throw std::logic_error("Change the total number of element in matrix.");
     return;
   }
   _R = rows;
@@ -165,22 +162,17 @@ void Matrix::resize(int rows, int columns) {
 }
 
 double Matrix::get(int row, int column) const {
-  if (row > _R || column > _C) {
-    cout << "The element doesn't exist!\n";
-    return 0;
-  } else {
-    int index = _R * column + row;
-    return (_data[index]);
-  }
+  if (row > _R || column > _C)
+	throw std::logic_error("Index exceeds array bounds");
+  int index = _R * column + row;
+  return (_data[index]);
 }
 
 void Matrix::set(int row, int column, double x) {
   if (row > _R || column > _C)
-    cout << "The element doesn't exist!\n";
-  else {
-    int index = _R * column + row;
-    _data[index] = x;
-  }
+    throw std::logic_error("Index exceeds array bounds");
+  int index = _R * column + row;
+  _data[index] = x;
 }
 
 double Matrix::max() const {
@@ -286,6 +278,7 @@ void Matrix::print() const {
 
 int Matrix::total_m = 0;
 int Matrix::totalMemory() {
+	
   cout << "Current memory usage: " << total_m << " Byte\n";
   return total_m;
 }
