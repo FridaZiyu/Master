@@ -3,30 +3,30 @@
 #include <fstream>
 #include <iomanip>
 #include <iterator>
-#include <vector>
 #include <stdexcept>
+#include <vector>
 using std::cout;
 using std::string;
 Matrix::Matrix() {
-  //cout << "INFO::Constr. Empty Matrix\n";
+  // cout << "INFO::Constr. Empty Matrix\n";
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 }
 Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
-  //cout << "INFO::Constr. Empty Matrix with size (" << rows << ',' << columns
+  // cout << "INFO::Constr. Empty Matrix with size (" << rows << ',' << columns
   //     << ")\n";
   _data.resize(_R * _C);
   std::fill(_data.begin(), _data.end(), 0);
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 }
 
 Matrix::Matrix(int rows, int columns, const std::vector<double> &data)
     : _R(rows), _C(columns), _data(data) {
-  //cout << "INFO::Constr. A Matrix with size (" << rows << ',' << columns
+  // cout << "INFO::Constr. A Matrix with size (" << rows << ',' << columns
   //     << ")\n";
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 }
 
 // copy constructor
@@ -34,15 +34,16 @@ Matrix::Matrix(const Matrix &m) {
   _R = m._R;
   _C = m._C;
   _data = m._data;
-  //cout << "INFO::Copy Constr. Copy a Matrix with size (" << _R << ',' << _C
+  // cout << "INFO::Copy Constr. Copy a Matrix with size (" << _R << ',' << _C
   //     << ")\n";
   total_m = total_m + 2 * 4 + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 }
 
 // operator=
 Matrix &Matrix::operator=(const Matrix &m) {
-  //cout << "INFO::Custom operator '='. Copy a Matrix with size (" << m._R << ',' << m._C << ")\n";
+  // cout << "INFO::Custom operator '='. Copy a Matrix with size (" << m._R <<
+  // ',' << m._C << ")\n";
   total_m = total_m - _data.size() * sizeof(_data[0]);
 
   _R = m._R;
@@ -50,7 +51,7 @@ Matrix &Matrix::operator=(const Matrix &m) {
   _data = m._data;
 
   total_m = total_m + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 
   return (*this);
 }
@@ -65,7 +66,7 @@ Matrix &Matrix::operator+=(const Matrix &m2) {
   return (*this);
 }
 
-Matrix &Matrix::operator+=(double x){
+Matrix &Matrix::operator+=(double x) {
   for (int i = 0; i < _R * _C; i++) {
     _data[i] += x;
   }
@@ -81,7 +82,7 @@ Matrix Matrix::operator+(const Matrix &m2) const {
   return (m);
 }
 
-Matrix Matrix::operator+(double x) const{
+Matrix Matrix::operator+(double x) const {
   Matrix m(*this);
   m += x;
   return (m);
@@ -97,7 +98,7 @@ Matrix &Matrix::operator-=(const Matrix &m2) {
   return (*this);
 }
 
-Matrix &Matrix::operator-=(double x){
+Matrix &Matrix::operator-=(double x) {
   for (int i = 0; i < _R * _C; i++) {
     _data[i] -= x;
   }
@@ -113,14 +114,14 @@ Matrix Matrix::operator-(const Matrix &m2) const {
   return (m);
 }
 
-Matrix Matrix::operator-(double x) const{
+Matrix Matrix::operator-(double x) const {
   Matrix m(*this);
   m -= x;
   return (m);
 }
 
 // operator*=
-Matrix &Matrix::operator*=(double x){
+Matrix &Matrix::operator*=(double x) {
   for (int i = 0; i < _R * _C; i++) {
     _data[i] *= x;
   }
@@ -128,33 +129,33 @@ Matrix &Matrix::operator*=(double x){
 }
 
 // operator*
-Matrix Matrix::operator*(double x) const{
+Matrix Matrix::operator*(double x) const {
   Matrix m(*this);
   m *= x;
   return (m);
 }
 
 // operator()
-double Matrix::operator()(int r,int c) const{
-  if (r > _R || c > _C)
-    throw std::logic_error("Index exceeds array bounds"); 
-  return (_data[c*_R+r]);
-}
-
-double &Matrix::operator()(int r, int c){
+double Matrix::operator()(int r, int c) const {
   if (r > _R || c > _C)
     throw std::logic_error("Index exceeds array bounds");
-  return (_data[c*_R+r]);
+  return (_data[c * _R + r]);
+}
+
+double &Matrix::operator()(int r, int c) {
+  if (r > _R || c > _C)
+    throw std::logic_error("Index exceeds array bounds");
+  return (_data[c * _R + r]);
 }
 
 // Deconstructor
 Matrix::~Matrix() {
   total_m = total_m - _data.size() * sizeof(_data[0]) - 2 * 4;
-  totalMemory();
+  // totalMemory();
 }
 void Matrix::resize(int rows, int columns) {
-  if (rows * columns != _R * _C) {   
-	throw std::logic_error("Change the total number of element in matrix.");
+  if (rows * columns != _R * _C) {
+    throw std::logic_error("Change the total number of element in matrix.");
     return;
   }
   _R = rows;
@@ -163,7 +164,7 @@ void Matrix::resize(int rows, int columns) {
 
 double Matrix::get(int row, int column) const {
   if (row > _R || column > _C)
-	throw std::logic_error("Index exceeds array bounds");
+    throw std::logic_error("Index exceeds array bounds");
   int index = _R * column + row;
   return (_data[index]);
 }
@@ -218,7 +219,7 @@ void Matrix::AsciiRead(const string filename) {
   cout << "INFO::AsciiRead. Read a Matrix(" << _R << ',' << _C
        << ") from file.\n";
   total_m = total_m + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 }
 void Matrix::AsciiWrite(const string filename) {
   std::ofstream out(filename);
@@ -248,7 +249,7 @@ void Matrix::BinaryRead(const string filename) {
   cout << "INFO::BinaryRead. Read a Matrix(" << _R << ',' << _C
        << ") from file.\n";
   total_m = total_m + _data.size() * sizeof(_data[0]);
-  totalMemory();
+  // totalMemory();
 }
 void Matrix::BinaryWrite(const string filename) {
   std::ofstream out(filename, std::ios_base::binary);
@@ -278,7 +279,7 @@ void Matrix::print() const {
 
 int Matrix::total_m = 0;
 int Matrix::totalMemory() {
-	
+
   cout << "Current memory usage: " << total_m << " Byte\n";
   return total_m;
 }
