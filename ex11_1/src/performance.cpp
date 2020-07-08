@@ -34,7 +34,8 @@ int main() {
 	t = myTime.toc();
 	//toc
 	//calculate flop
-	flop += (i+1) * i;
+	flop += (2*(i-1)+2) * i;
+	//std::cout<<flop<<std::endl;
 	B(i-2,0) = i;
 	B(i-2,1) = t; //time-> millisecond;
 	if (t == 0)
