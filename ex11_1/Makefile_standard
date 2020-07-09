@@ -6,7 +6,7 @@ obj/Fourierseries.o: src/Fourierseries.cpp include/Fourierseries.hpp include/Mat
 	g++ -I./include/ -std=c++11 -Wall -c src/Fourierseries.cpp -o obj/Fourierseries.o
 
 obj/performance.o: src/performance.cpp include/Matrix.hpp include/tictoc.hpp
-	g++ -I./include/ -std=c++11 -Wall -c src/performance.cpp -o obj/performance.o
+	g++ -I./include/ -std=c++11 -Wall -c src/performance.cpp -O3 -o obj/performance.o
 	
 obj/testFourier.o: src/testFourier.cpp include/*.hpp 
 	g++ -I./include/ -std=c++11 -Wall -c src/testFourier.cpp -o obj/testFourier.o

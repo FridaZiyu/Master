@@ -10,15 +10,15 @@ int main() {
   try {
 	int test_num = 1000;
 	Matrix A;	
-	Matrix B(test_num-2,3);
+	Matrix B(test_num - 1,3);
 	double t;
-	double flop = 0;
+	int flop = 0;
 	flop += 2; //size =1x1;
 	/*
 	A.AsciiRead("spd.txt"); 
 	A.chol();
 	A.print();*/
-	for( int i = 2; i < test_num; i++){
+	for( int i = 2; i <= test_num; i++){
 	//create a positive matrix
 	//myTime.tic();
 	A.identity(i);
@@ -41,10 +41,10 @@ int main() {
 	if (t == 0)
 		B(i-2,2) = 0;   //calculation time too small
 	else
-		B(i-2,2) = flop * 1000 / t ; //FLOPs/second
+		B(i-2,2) = flop * 1000.0 / t ; //FLOPs/second
 	}
 	//B.AsciiWrite("performance.txt");
-	B.BinaryWrite("performance_b");
+	B.BinaryWrite("performance_1000");
     cout << "===========================================\n";
   } catch (std::logic_error &ex) {
     std::cerr << "Logic error: " << ex.what() << "\n";
