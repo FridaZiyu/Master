@@ -17,8 +17,8 @@ public:
 	void set_degree(int n);
 	void set_freq(double w);
 	//IO
-	void AsciiRead(const std::string filename);
-	void AsciiWrite(const std::string filename);
+//	void AsciiRead(const std::string filename);
+//	void AsciiWrite(const std::string filename);
 	
 	//further implementation
 	void getFunctionalValues( const Matrix & t, Matrix & l );
@@ -26,7 +26,7 @@ public:
 private:
 	int _degree; //n_max
 	double _omega; //base frequency
-	Matrix _coef; //coefficients,size-> (2*(n+1),1)
+	Matrix _coef; //coefficients,size-> (2*n+1,1)
 	
 };
 #endif

@@ -156,9 +156,12 @@ Matrix::~Matrix() {
   total_m = total_m - _data.size() * sizeof(_data[0]) - 2 * 4;
   // totalMemory();
 }
-void Matrix::resize(int rows, int columns) {
+void Matrix::resize(int rows, int columns) {	  
   if (rows * columns != _R * _C) {
-    throw std::logic_error("Change the total number of element in matrix.");
+	  _R = rows;
+	  _C = columns;
+	  _data.resize(_R * _C);
+    //std::cerr <<"Warning! Change the total memory of matrix.\n";
     return;
   }
   _R = rows;

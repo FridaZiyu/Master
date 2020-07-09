@@ -17,33 +17,31 @@ Fourierseries::Fourierseries(const Fourierseries &f) {
 void Fourierseries::set_degree(int n) { _degree = n; }
 void Fourierseries::set_freq(double w) { _omega = w; }
 
-void Fourierseries::AsciiRead(const std::string filename) {}
-void Fourierseries::AsciiWrite(const std::string filename) {}
+//void Fourierseries::AsciiRead(const std::string filename){}
+//void Fourierseries::AsciiWrite(const std::string filename){}
 
 void Fourierseries::getFunctionalValues(const Matrix &t, Matrix &l) {
   int n = _degree;
-  int w = _omega;
-  l.resize(t._R, 1);
-  for (int i = 0; i < t._R; i++) {
-    double s = _coef[0];
+  double w = _omega;
+  l.resize(t.get_rows(), 1);
+  for (int i = 0; i < t.get_rows(); i++) {
+    double s = _coef(0,0);
     for (int k = 1; k <= n; k++) {
-      s += _coef[k] * cos(w * k * t._data[i]) +
-           _coef[1 + 2 * k] * sin(w * k * t._data[i]);
+      s += _coef(k,0) * cos(w * k * t(i,0)) +
+           _coef(1 + 2 * k,0) * sin(w * k * t(i,0));
     }
-    l._data[i] = s;
+    l(i,0) = s;
   }
 }
 void Fourierseries::getDesignMatrix(const Matrix &t, Matrix &A) {
-  A.resize(_degree * 2 + 1, t._R);
+  A.resize(_degree * 2 + 1, t.get_rows());
   int n = _degree;
-  int w = _omega;
-  for (int i = 0; i < t._R; i++) {
-    A._data[i * 2 * n + 0] = 0.5;
+  double w = _omega;
+  for (int i = 0; i < t.get_rows(); i++) {
+	A(0,i) = 0.5; //cos(0)
     for (int k = 1; k <= n; k++) {
-      if (k % 2 == 1)
-        A._data[i * 2 * n + k] = cos(w * t._data[i]);
-      else
-        A._data[i * 2 * n + k] = sin(w * t._data[i]);
+	  A(2*k-1,i) = cos(w * t(i,0));;
+	  A(2*k,i) = sin(w * t(i,0));
     }
   }
   A.transpose();

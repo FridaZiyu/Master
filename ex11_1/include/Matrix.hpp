@@ -28,6 +28,8 @@ public:
   // member functions
   void resize(int rows, int columns);
   // get & set
+  int get_rows() const {return _R;};
+  int get_columns() const {return _C;};
   double get(int r, int c) const;
   void set(int r, int c, double x);
   // max & min
