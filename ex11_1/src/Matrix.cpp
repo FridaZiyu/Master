@@ -1,11 +1,11 @@
 #include "Matrix.hpp"
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <iterator>
 #include <stdexcept>
 #include <vector>
-#include <cmath>
 using std::cout;
 using std::string;
 Matrix::Matrix() {
@@ -14,8 +14,8 @@ Matrix::Matrix() {
   // totalMemory();
 }
 Matrix::Matrix(int rows, int columns) : _R(rows), _C(columns) {
-  	if (rows < 1 || columns < 1)
-		throw std::logic_error("size of matrix must >= 1");
+  if (rows < 1 || columns < 1)
+    throw std::logic_error("size of matrix must >= 1");
   // cout << "INFO::Constr. Empty Matrix with size (" << rows << ',' << columns
   //     << ")\n";
   _data.resize(_R * _C);
@@ -156,12 +156,12 @@ Matrix::~Matrix() {
   total_m = total_m - _data.size() * sizeof(_data[0]) - 2 * 4;
   // totalMemory();
 }
-void Matrix::resize(int rows, int columns) {	  
+void Matrix::resize(int rows, int columns) {
   if (rows * columns != _R * _C) {
-	  _R = rows;
-	  _C = columns;
-	  _data.resize(_R * _C);
-    //std::cerr <<"Warning! Change the total memory of matrix.\n";
+    _R = rows;
+    _C = columns;
+    _data.resize(_R * _C);
+    // std::cerr <<"Warning! Change the total memory of matrix.\n";
     return;
   }
   _R = rows;
@@ -206,65 +206,67 @@ double Matrix::min(int &r, int &c) const {
   c = loc / _R;
   return (*minimum);
 }
-void Matrix::transpose(){
-	std::vector<double> t_data(_data); // a temp copy
-	for(int i = 0;i < _C;i++)
-		for (int j = 0; j < _R; j++)
-			_data[j *_C + i] = t_data[i *_R + j];
-	int temp;
-	temp = _R;
-	_R = _C;
-	_C = temp;		
+void Matrix::transpose() {
+  std::vector<double> t_data(_data); // a temp copy
+  for (int i = 0; i < _C; i++)
+    for (int j = 0; j < _R; j++)
+      _data[j * _C + i] = t_data[i * _R + j];
+  int temp;
+  temp = _R;
+  _R = _C;
+  _C = temp;
 }
-void Matrix::identity(const int size){
-	if (size < 1)
-		throw std::logic_error("size of matrix must >= 1");
-	total_m = total_m - _data.size() * sizeof(_data[0]);
-	_R = size;
-	_C = size;
-	_data.resize(_R * _C);
-	std::fill(_data.begin(), _data.end(), 0);
-	total_m = total_m + _data.size() * sizeof(_data[0]);
-	for (int i = 0; i < size; i++)
-		_data[_R * i + i] = 1;
-}	
-void Matrix::chol(const char sign){
-	//if neither 'U' nor 'L', error
-	int flag;
-	if (sign == 'U' || sign == 'u')
-		flag = 0;
-	else if (sign == 'L' || sign == 'l')
-		flag = 1;
-	else
-		throw std::logic_error("Error using chol. Option must be 'U' or 'L'.");
-	if (_R != _C)
-		throw std::logic_error("Error using chol. Matrix must be squre");
-	std::vector<double> t_data(_data);
-	
-	_data.clear(); //lower part =0
-	_data.resize(_R*_C);
-	//loop
-	double isPositive;
-	for (int i = 0; i < _R; i++){
-		for (int j = 0; j <= i; j++){
-			double sum =0;
-			if (j == i){
-				for (int k = 0; k < j; k++)
-					sum += pow(_data[j * _R + k], 2);  
-				isPositive = t_data[j * _R + j] - sum;
-				if (isPositive <= 0)
-					throw std::logic_error("Error using chol. Matrix must be positive definite.");
-				_data[j * _R + j] = sqrt(isPositive);
-			}else{
-				for(int k =0; k < j; k++)
-					sum += _data[i*_R + k] * _data[j*_R + k];
-				_data[i * _R + j] = (t_data[i * _R + j] - sum) / _data[j * _R + j];
-			}
-	}}
-	
-	//check demand
-	if (flag == 1)
-		transpose();
+void Matrix::identity(const int size) {
+  if (size < 1)
+    throw std::logic_error("size of matrix must >= 1");
+  total_m = total_m - _data.size() * sizeof(_data[0]);
+  _R = size;
+  _C = size;
+  _data.resize(_R * _C);
+  std::fill(_data.begin(), _data.end(), 0);
+  total_m = total_m + _data.size() * sizeof(_data[0]);
+  for (int i = 0; i < size; i++)
+    _data[_R * i + i] = 1;
+}
+void Matrix::chol(const char sign) {
+  // if neither 'U' nor 'L', error
+  int flag;
+  if (sign == 'U' || sign == 'u')
+    flag = 0;
+  else if (sign == 'L' || sign == 'l')
+    flag = 1;
+  else
+    throw std::logic_error("Error using chol. Option must be 'U' or 'L'.");
+  if (_R != _C)
+    throw std::logic_error("Error using chol. Matrix must be squre");
+  std::vector<double> t_data(_data);
+
+  _data.clear(); // lower part =0
+  _data.resize(_R * _C);
+  // loop
+  double isPositive;
+  for (int i = 0; i < _R; i++) {
+    for (int j = 0; j <= i; j++) {
+      double sum = 0;
+      if (j == i) {
+        for (int k = 0; k < j; k++)
+          sum += pow(_data[j * _R + k], 2);
+        isPositive = t_data[j * _R + j] - sum;
+        if (isPositive <= 0)
+          throw std::logic_error(
+              "Error using chol. Matrix must be positive definite.");
+        _data[j * _R + j] = sqrt(isPositive);
+      } else {
+        for (int k = 0; k < j; k++)
+          sum += _data[i * _R + k] * _data[j * _R + k];
+        _data[i * _R + j] = (t_data[i * _R + j] - sum) / _data[j * _R + j];
+      }
+    }
+  }
+
+  // check demand
+  if (flag == 1)
+    transpose();
 }
 // IO
 void Matrix::AsciiRead(const string filename) {
