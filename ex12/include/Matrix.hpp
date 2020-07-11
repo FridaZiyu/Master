@@ -18,11 +18,13 @@ public:
   Matrix operator-(const Matrix &anotherMatrix) const;
   Matrix operator-(double x) const;
   Matrix operator*(double x) const;
+  Matrix operator*(const Matrix &anotherMatrix) const;
   Matrix &operator+=(const Matrix &anotherMatrix);
   Matrix &operator+=(double x);
   Matrix &operator-=(const Matrix &anotherMatrix);
   Matrix &operator-=(double x);
   Matrix &operator*=(double x);
+  Matrix &operator*=(const Matrix &anotherMatrix);
   double operator()(int r, int c) const;
   double &operator()(int r, int c);
   // member functions
@@ -43,7 +45,7 @@ public:
   void chol(const char sign = 'U'); // default same as Matlab
   // Computation
   void dgemm(const Matrix &A, const Matrix &B, const char TransA,
-             const char TransB, const double a, const double b);
+             const char TransB, Matrix &C, const double a, const double b);
   void isSymmProductOf(const Matrix &A, const char TransA);
   void plusSymmProductOf(const Matrix &A, const char TransA,
                          const double w = 1.0);

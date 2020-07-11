@@ -1,26 +1,20 @@
-all: bin/performance bin/testFourier
+all: bin/main
 
 obj/Matrix.o: src/Matrix.cpp include/Matrix.hpp
 	g++ -I./include/ -std=c++11 -Wall -c src/Matrix.cpp -o obj/Matrix.o
 obj/Fourierseries.o: src/Fourierseries.cpp include/Fourierseries.hpp include/Matrix.hpp
 	g++ -I./include/ -std=c++11 -Wall -c src/Fourierseries.cpp -o obj/Fourierseries.o
 
-obj/performance.o: src/performance.cpp include/Matrix.hpp include/tictoc.hpp
-	g++ -I./include/ -std=c++11 -Wall -c src/performance.cpp -O3 -o obj/performance.o
-	
-obj/testFourier.o: src/testFourier.cpp include/*.hpp 
-	g++ -I./include/ -std=c++11 -Wall -c src/testFourier.cpp -o obj/testFourier.o
+obj/main.o: src/main.cpp include/Matrix.hpp
+	g++ -I./include/ -std=c++11 -Wall -c src/main.cpp -O3 -o obj/main.o
 	
 
-lib/libtools.a: obj/Matrix.o obj/Fourierseries.o 
-	ar rcs lib/libtools.a obj/Matrix.o obj/Fourierseries.o
+lib/libtools.a: obj/Matrix.o  
+	ar rcs lib/libtools.a obj/Matrix.o
 
-bin/performance: lib/libtools.a obj/performance.o
-	g++ obj/performance.o obj/Matrix.o -o bin/perform
+bin/main: lib/libtools.a obj/main.o
+	g++ obj/main.o obj/Matrix.o -o bin/main
 	
-bin/testFourier: lib/libtools.a obj/testFourier.o
-	g++ obj/testFourier.o -L./lib/ -ltools -o bin/test
-
 
 clean:
 	rm -f obj/*.o bin/* lib/libtools.a

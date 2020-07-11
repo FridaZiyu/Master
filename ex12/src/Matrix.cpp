@@ -131,10 +131,26 @@ Matrix &Matrix::operator*=(double x) {
   return (*this);
 }
 
+Matrix &Matrix::operator*=(const Matrix &m2) {
+  if (_C != m2._R)
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix A(*this);
+  dgemm(A, m2, 'N', 'N', *this, 1, 0);
+  return (*this);
+}
+
 // operator*
 Matrix Matrix::operator*(double x) const {
   Matrix m(*this);
   m *= x;
+  return (m);
+}
+
+Matrix Matrix::operator*(const Matrix &m2) const {
+  if (_C != m2._R)
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix m(*this);
+  m *= m2;
   return (m);
 }
 
@@ -271,7 +287,8 @@ void Matrix::chol(const char sign) {
 
 // C<-a*A(')B(')+b*C
 void Matrix::dgemm(const Matrix &A, const Matrix &B, const char TransA,
-                   const char TransB, const double a = 1.0, const doubleb) {
+                   const char TransB, Matrix &C, const double a,
+                   const double b) {
   Matrix At(A);
   Matrix Bt(B);
   if (TransA == 'T' || TransA == 't') {
@@ -287,15 +304,13 @@ void Matrix::dgemm(const Matrix &A, const Matrix &B, const char TransA,
   if (A._C != B._R)
     throw std::logic_error(
         "Then dimensions of the Matrices are not suitable for product.");
-  _R = At._R;
-  _C = Bt._C;
-  _data.resize(_R * _C);
+  C.resize(At._R, Bt._C);
   for (int j = 0; j < _C; j++) {
     for (int i = 0; i < _R; i++) {
       double s = 0;
       for (int k = 0; k < _C; k++)
         s += At(i, k) * Bt(k, j);
-      _data[j * _R + i] = a * s + b * _data[j * _R + i];
+      C(i, j) = a * s + b * C(i, j);
     }
   }
 }
@@ -303,30 +318,28 @@ void Matrix::dgemm(const Matrix &A, const Matrix &B, const char TransA,
 //*this+=w*A(')B(')
 void Matrix::plusProductOf(const Matrix &A, const Matrix &B, const char TransA,
                            const char TransB, const double w) {
-
-  *this = dgemm(A, B, TransA, TransB, w, 1);
+  dgemm(A, B, TransA, TransB, *this, w, 1);
 }
 
 //*this=A(')B(')
 void Matrix::isProductOf(const Matrix &A, const Matrix &B, const char TransA,
                          const char TransB) {
-
-  *this = dgemm(A, B, TransA, TransB, 1, 0);
+  dgemm(A, B, TransA, TransB, *this, 1, 0);
 }
 
 //*this+=w*A(')A(')
-void plusSymmProductOf(const Matrix &A, const char TransA,
-                       const double w = 1.0) {
+void Matrix::plusSymmProductOf(const Matrix &A, const char TransA,
+                               const double w) {
   Matrix At(A);
   At.transpose();
-  *this = dgemm(A, At, TransA, TransA, w, 1);
+  dgemm(A, At, TransA, TransA, *this, w, 1);
 }
 
 //*this=A(')A(')
 void Matrix::isSymmProductOf(const Matrix &A, const char TransA) {
   Matrix At(A);
   At.transpose();
-  *this = dgemm(A, At, TransA, TransA, 1, 0);
+  dgemm(A, At, TransA, TransA, *this, 1, 0);
 }
 
 // IO
