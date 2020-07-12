@@ -44,6 +44,8 @@ public:
   void identity(const int size); // generate size*size identity matrix(for test)
   void chol(const char sign = 'U'); // default same as Matlab
   // Computation
+  Matrix dgemp(const Matrix &A, const Matrix &B, const double a,
+               const double b);
   void dgemm(const Matrix &A, const Matrix &B, const char TransA,
              const char TransB, Matrix &C, const double a, const double b);
   void isSymmProductOf(const Matrix &A, const char TransA);

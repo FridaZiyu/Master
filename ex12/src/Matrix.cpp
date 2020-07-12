@@ -61,11 +61,7 @@ Matrix &Matrix::operator=(const Matrix &m) {
 
 // operator+=
 Matrix &Matrix::operator+=(const Matrix &m2) {
-  if (_R != m2._R || _C != m2._C)
-    throw std::logic_error("Matrix dimensions must agree.");
-  for (int i = 0; i < _R * _C; i++) {
-    _data[i] += m2._data[i];
-  }
+  *this = dgemp(*this, m2, 1, 1);
   return (*this);
 }
 
@@ -73,13 +69,16 @@ Matrix &Matrix::operator+=(double x) {
   for (int i = 0; i < _R * _C; i++) {
     _data[i] += x;
   }
+  // std::vector<double> data;
+  // data.resize(_R*_C);
+  // std::fill(data.begin(), data.end(), x);
+  // Matrix m2(_R,_C,data);
+  //*this+=m2;
   return (*this);
 }
 
 // operator+
 Matrix Matrix::operator+(const Matrix &m2) const {
-  if (_R != m2._R || _C != m2._C)
-    throw std::logic_error("Matrix dimensions must agree.");
   Matrix m(*this);
   m += m2;
   return (m);
@@ -93,11 +92,7 @@ Matrix Matrix::operator+(double x) const {
 
 // operator-=
 Matrix &Matrix::operator-=(const Matrix &m2) {
-  if (_R != m2._R || _C != m2._C)
-    throw std::logic_error("Matrix dimensions must agree.");
-  for (int i = 0; i < _R * _C; i++) {
-    _data[i] -= m2._data[i];
-  }
+  *this = dgemp(*this, m2, 1, -1);
   return (*this);
 }
 
@@ -110,8 +105,6 @@ Matrix &Matrix::operator-=(double x) {
 
 // operator-
 Matrix Matrix::operator-(const Matrix &m2) const {
-  if (_R != m2._R || _C != m2._C)
-    throw std::logic_error("Matrix dimensions must agree.");
   Matrix m(*this);
   m -= m2;
   return (m);
@@ -283,6 +276,18 @@ void Matrix::chol(const char sign) {
   // check demand
   if (flag == 1)
     transpose();
+}
+
+// C<-a*A+b*B
+Matrix Matrix::dgemp(const Matrix &A, const Matrix &B, const double a,
+                     const double b) {
+  if (A._R != B._R || A._C != B._C)
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix m(A._R, A._C);
+  for (int i = 0; i < A._R * A._C; i++) {
+    m._data[i] = a * A._data[i] + b * B._data[i];
+  }
+  return m;
 }
 
 // C<-a*A(')B(')+b*C
