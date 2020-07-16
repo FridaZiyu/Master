@@ -352,136 +352,134 @@ int Matrix::totalMemory() {
   return total_m;
 }
 /***********************************************************/
-//developed based on OpenBLAS
-void Matrix::isSymmProductOf(const Matrix & A, char TransA){
-	//calculate size
-	if (TransA == 'N'||TransA == 'n') //A*A'
-	{
-		_C = A._R;
-		_R = A._R;
-		_data.resize(_C * _R);
-		f77blas_dgemm('N','T', A._R, A._R, A._C, 1.0, A._data.data(), A._R, A._data.data(), A._R, 0.0,_data.data(), _R);
-	}
-	else  //TransA == 'T', A'*A
-	{
-		_C = A._C;
-		_R = A._C;
-		_data.resize(_C * _R);
-		f77blas_dgemm('T','N', A._C, A._C, A._R, 1.0, A._data.data(), A._R, A._data.data(), A._R, 0.0,_data.data(), _R);
-	}		
-	
+// developed based on OpenBLAS
+void Matrix::isSymmProductOf(const Matrix &A, char TransA) {
+  // calculate size
+  if (TransA == 'N' || TransA == 'n') // A*A'
+  {
+    _C = A._R;
+    _R = A._R;
+    _data.resize(_C * _R);
+    f77blas_dgemm('N', 'T', A._R, A._R, A._C, 1.0, A._data.data(), A._R,
+                  A._data.data(), A._R, 0.0, _data.data(), _R);
+  } else // TransA == 'T', A'*A
+  {
+    _C = A._C;
+    _R = A._C;
+    _data.resize(_C * _R);
+    f77blas_dgemm('T', 'N', A._C, A._C, A._R, 1.0, A._data.data(), A._R,
+                  A._data.data(), A._R, 0.0, _data.data(), _R);
+  }
 }
 
-void Matrix::plusSymmProductOf(const Matrix & A, char TransA, double w){
-		if (TransA == 'N'||TransA == 'n') //A*A'
-	{
-		_C = A._R;
-		_R = A._R;
-		_data.resize(_C * _R);
-		f77blas_dgemm('N','T', A._R, A._R, A._C, w, A._data.data(), A._R, A._data.data(), A._R, 1.0,_data.data(), _R);
-	}
-	else  //TransA == 'T', A'*A
-	{
-		_C = A._C;
-		_R = A._C;
-		_data.resize(_C * _R);
-		f77blas_dgemm('T','N', A._C, A._C, A._R, w, A._data.data(), A._R, A._data.data(), A._R, 1.0,_data.data(), _R);
-	}
+void Matrix::plusSymmProductOf(const Matrix &A, char TransA, double w) {
+  if (TransA == 'N' || TransA == 'n') // A*A'
+  {
+    _C = A._R;
+    _R = A._R;
+    _data.resize(_C * _R);
+    f77blas_dgemm('N', 'T', A._R, A._R, A._C, w, A._data.data(), A._R,
+                  A._data.data(), A._R, 1.0, _data.data(), _R);
+  } else // TransA == 'T', A'*A
+  {
+    _C = A._C;
+    _R = A._C;
+    _data.resize(_C * _R);
+    f77blas_dgemm('T', 'N', A._C, A._C, A._R, w, A._data.data(), A._R,
+                  A._data.data(), A._R, 1.0, _data.data(), _R);
+  }
 }
 
-void Matrix::isProductOf(const Matrix & A, const Matrix & B, char transA, char transB){
-	int k;
-	if (transA =='N' || transA == 'n')
-	{	_R = A._R;
-		k = A._C;
-		}
-	else {
-		_R = A._C;
-		k = A._R;
-	}
-	
-	if (transB =='N' || transB == 'n')
-		_C = B._C;
-	else
-		_C = B._R;
-	
-	_data.resize( _C * _R);
-	
-	f77blas_dgemm(transA, transB, _R, _C, k, 1.0, A._data.data(), A._R, B._data.data(), B._R, 0.0,_data.data(), _R);		
+void Matrix::isProductOf(const Matrix &A, const Matrix &B, char transA,
+                         char transB) {
+  int k;
+  if (transA == 'N' || transA == 'n') {
+    _R = A._R;
+    k = A._C;
+  } else {
+    _R = A._C;
+    k = A._R;
+  }
+
+  if (transB == 'N' || transB == 'n')
+    _C = B._C;
+  else
+    _C = B._R;
+
+  _data.resize(_C * _R);
+
+  f77blas_dgemm(transA, transB, _R, _C, k, 1.0, A._data.data(), A._R,
+                B._data.data(), B._R, 0.0, _data.data(), _R);
 }
-void Matrix::plusProductOf(const Matrix & A, const Matrix & B, char transA, char transB, double w){
-	int k;
-	if (transA =='N' || transA == 'n')
-	{	_R = A._R;
-		k = A._C;
-		}
-	else {
-		_R = A._C;
-		k = A._R;
-	}
-	
-	if (transB =='N' || transB == 'n')
-		_C = B._C;
-	else
-		_C = B._R;
-	
-	_data.resize( _C * _R);
-	
-	f77blas_dgemm(transA, transB, _R, _C, k, w, A._data.data(), A._R, B._data.data(), B._R, 1.0,_data.data(), _R);		
+void Matrix::plusProductOf(const Matrix &A, const Matrix &B, char transA,
+                           char transB, double w) {
+  int k;
+  if (transA == 'N' || transA == 'n') {
+    _R = A._R;
+    k = A._C;
+  } else {
+    _R = A._C;
+    k = A._R;
+  }
+
+  if (transB == 'N' || transB == 'n')
+    _C = B._C;
+  else
+    _C = B._R;
+
+  _data.resize(_C * _R);
+
+  f77blas_dgemm(transA, transB, _R, _C, k, w, A._data.data(), A._R,
+                B._data.data(), B._R, 1.0, _data.data(), _R);
 }
 
 Matrix Matrix::operator*(const Matrix &A) const {
-  Matrix m(_R, A._C); 
-  m.isProductOf(*this, A, 'N','N');	
+  Matrix m(_R, A._C);
+  m.isProductOf(*this, A, 'N', 'N');
   return (m);
 }
 
 Matrix &Matrix::operator*=(const Matrix &A) {
-  Matrix m(_R, A._C); 
-  m.isProductOf(*this, A, 'N','N');	
+  Matrix m(_R, A._C);
+  m.isProductOf(*this, A, 'N', 'N');
   //(*this).plusProductOf(*this, A, 'N', 'N', 1.0);
   *this = m;
   return (*this);
 }
 
-  Matrix Matrix::operator+(const Matrix &A) const{
-	  //check size
-	  if ((A._C != _C) ||(A._R != _R))
-		  throw std::logic_error("Matrix dimensions must agree.");
-	  Matrix m;	  
-	  m.identity(A._C); 
-	  Matrix n(*this);
-	  n.plusProductOf(A, m, 'N','N', 1.0);
-	  return n;
-	  
-  }
-  Matrix &Matrix::operator+=(const Matrix &A){
-	  if ((A._C != _C) ||(A._R != _R))
-		  throw std::logic_error("Matrix dimensions must agree.");
-	  Matrix m;	  
-	  m.identity(A._C); 
-	  (*this).plusProductOf(A, m, 'N','N', 1.0);
-	  return (*this);
-  }
-  Matrix Matrix::operator-(const Matrix &A) const{
-	  //check size
-	  if ((A._C != _C) ||(A._R != _R))
-		  throw std::logic_error("Matrix dimensions must agree.");
-	  Matrix m;	  
-	  m.identity(A._C); 
-	  Matrix n(*this);
-	  n.plusProductOf(A, m, 'N','N', -1.0);
-	  return n; 
-  }
-  Matrix &Matrix::operator-=(const Matrix &A){
-	   if ((A._C != _C) ||(A._R != _R))
-		  throw std::logic_error("Matrix dimensions must agree.");
-	  Matrix m;	  
-	  m.identity(A._C); 
-	  (*this).plusProductOf(A, m, 'N','N', -1.0);
-	  return (*this); 
-  }
-
-
-
-
+Matrix Matrix::operator+(const Matrix &A) const {
+  // check size
+  if ((A._C != _C) || (A._R != _R))
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix m;
+  m.identity(A._C);
+  Matrix n(*this);
+  n.plusProductOf(A, m, 'N', 'N', 1.0);
+  return n;
+}
+Matrix &Matrix::operator+=(const Matrix &A) {
+  if ((A._C != _C) || (A._R != _R))
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix m;
+  m.identity(A._C);
+  (*this).plusProductOf(A, m, 'N', 'N', 1.0);
+  return (*this);
+}
+Matrix Matrix::operator-(const Matrix &A) const {
+  // check size
+  if ((A._C != _C) || (A._R != _R))
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix m;
+  m.identity(A._C);
+  Matrix n(*this);
+  n.plusProductOf(A, m, 'N', 'N', -1.0);
+  return n;
+}
+Matrix &Matrix::operator-=(const Matrix &A) {
+  if ((A._C != _C) || (A._R != _R))
+    throw std::logic_error("Matrix dimensions must agree.");
+  Matrix m;
+  m.identity(A._C);
+  (*this).plusProductOf(A, m, 'N', 'N', -1.0);
+  return (*this);
+}

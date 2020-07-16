@@ -1,9 +1,9 @@
 #ifndef MATRIX_HPP_
 #define MATRIX_HPP_
+#include "f77blas.h"
 #include <iostream>
 #include <string>
 #include <vector>
-#include "f77blas.h"
 class Matrix {
 public:
   // constructor
@@ -14,9 +14,9 @@ public:
   ~Matrix(); // decon.
   // operators
   Matrix &operator=(const Matrix &m);
-  Matrix operator+(double x) const; 
+  Matrix operator+(double x) const;
   Matrix operator-(double x) const;
-  Matrix operator*(double x) const;  
+  Matrix operator*(double x) const;
   Matrix &operator+=(double x);
   Matrix &operator-=(double x);
   Matrix &operator*=(double x);
@@ -46,15 +46,16 @@ public:
   void print() const; // print
   // static func.
   static int totalMemory();
-  
-  //developed based on OpenBLAS
-  void isSymmProductOf(const Matrix & A, char TransA);
-  void plusSymmProductOf(const Matrix & A, char TransA, double w = 1.0);
-  void isProductOf(const Matrix & A, const Matrix & B, char transA, char transB);
-  void plusProductOf(const Matrix & A, const Matrix & B, char transA, char transB, double w = 1.0);
+
+  // developed based on OpenBLAS
+  void isSymmProductOf(const Matrix &A, char TransA);
+  void plusSymmProductOf(const Matrix &A, char TransA, double w = 1.0);
+  void isProductOf(const Matrix &A, const Matrix &B, char transA, char transB);
+  void plusProductOf(const Matrix &A, const Matrix &B, char transA, char transB,
+                     double w = 1.0);
   Matrix operator*(const Matrix &anotherMatrix) const;
   Matrix &operator*=(const Matrix &anotherMatrix);
-  //additional
+  // additional
   Matrix operator+(const Matrix &anotherMatrix) const;
   Matrix &operator+=(const Matrix &anotherMatrix);
   Matrix operator-(const Matrix &anotherMatrix) const;
