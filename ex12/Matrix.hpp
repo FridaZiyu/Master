@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "f77blas.h"
 class Matrix {
 public:
   // constructor
@@ -13,25 +14,19 @@ public:
   ~Matrix(); // decon.
   // operators
   Matrix &operator=(const Matrix &m);
-  Matrix operator+(const Matrix &anotherMatrix) const;
-  Matrix operator+(double x) const;
-  Matrix operator-(const Matrix &anotherMatrix) const;
+  Matrix operator+(double x) const; 
   Matrix operator-(double x) const;
-  Matrix operator*(double x) const;
-  Matrix operator*(const Matrix &anotherMatrix) const;
-  Matrix &operator+=(const Matrix &anotherMatrix);
+  Matrix operator*(double x) const;  
   Matrix &operator+=(double x);
-  Matrix &operator-=(const Matrix &anotherMatrix);
   Matrix &operator-=(double x);
   Matrix &operator*=(double x);
-  Matrix &operator*=(const Matrix &anotherMatrix);
   double operator()(int r, int c) const;
   double &operator()(int r, int c);
   // member functions
   void resize(int rows, int columns);
   // get & set
-  int get_rows() const { return _R; };
-  int get_columns() const { return _C; };
+  int rows() const { return _R; };
+  int columns() const { return _C; };
   double get(int r, int c) const;
   void set(int r, int c, double x);
   // max & min
@@ -43,19 +38,6 @@ public:
   void transpose();
   void identity(const int size); // generate size*size identity matrix(for test)
   void chol(const char sign = 'U'); // default same as Matlab
-  // Computation
-  Matrix dgemp(const Matrix &A, const Matrix &B, const double a,
-               const double b);
-  void dgemm(const Matrix &A, const Matrix &B, const char TransA,
-             const char TransB, Matrix &C, const double a, const double b);
-  void isSymmProductOf(const Matrix &A, const char TransA);
-  void plusSymmProductOf(const Matrix &A, const char TransA,
-                         const double w = 1.0);
-  void isProductOf(const Matrix &A, const Matrix &B, const char TransA,
-                   const char TransB);
-  void plusProductOf(const Matrix &A, const Matrix &B, const char TransA,
-                     const char TransB, const double w = 1.0);
-
   // IO
   void AsciiRead(const std::string filename);
   void AsciiWrite(const std::string filename);
@@ -64,6 +46,19 @@ public:
   void print() const; // print
   // static func.
   static int totalMemory();
+  
+  //developed based on OpenBLAS
+  void isSymmProductOf(const Matrix & A, char TransA);
+  void plusSymmProductOf(const Matrix & A, char TransA, double w = 1.0);
+  void isProductOf(const Matrix & A, const Matrix & B, char transA, char transB);
+  void plusProductOf(const Matrix & A, const Matrix & B, char transA, char transB, double w = 1.0);
+  Matrix operator*(const Matrix &anotherMatrix) const;
+  Matrix &operator*=(const Matrix &anotherMatrix);
+  //additional
+  Matrix operator+(const Matrix &anotherMatrix) const;
+  Matrix &operator+=(const Matrix &anotherMatrix);
+  Matrix operator-(const Matrix &anotherMatrix) const;
+  Matrix &operator-=(const Matrix &anotherMatrix);
 
 private:
   int _R = 0;

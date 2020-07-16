@@ -60,29 +60,30 @@ Matrix &Matrix::operator=(const Matrix &m) {
 }
 
 // operator+=
-Matrix &Matrix::operator+=(const Matrix &m2) {
-  *this = dgemp(*this, m2, 1, 1);
+/*Matrix &Matrix::operator+=(const Matrix &m2) {
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
+  for (int i = 0; i < _R * _C; i++) {
+    _data[i] += m2._data[i];
+  }
   return (*this);
-}
+}*/
 
 Matrix &Matrix::operator+=(double x) {
   for (int i = 0; i < _R * _C; i++) {
     _data[i] += x;
   }
-  // std::vector<double> data;
-  // data.resize(_R*_C);
-  // std::fill(data.begin(), data.end(), x);
-  // Matrix m2(_R,_C,data);
-  //*this+=m2;
   return (*this);
 }
 
 // operator+
-Matrix Matrix::operator+(const Matrix &m2) const {
+/*Matrix Matrix::operator+(const Matrix &m2) const {
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
   Matrix m(*this);
   m += m2;
   return (m);
-}
+}*/
 
 Matrix Matrix::operator+(double x) const {
   Matrix m(*this);
@@ -91,10 +92,14 @@ Matrix Matrix::operator+(double x) const {
 }
 
 // operator-=
-Matrix &Matrix::operator-=(const Matrix &m2) {
-  *this = dgemp(*this, m2, 1, -1);
+/*Matrix &Matrix::operator-=(const Matrix &m2) {
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
+  for (int i = 0; i < _R * _C; i++) {
+    _data[i] -= m2._data[i];
+  }
   return (*this);
-}
+}*/
 
 Matrix &Matrix::operator-=(double x) {
   for (int i = 0; i < _R * _C; i++) {
@@ -104,11 +109,13 @@ Matrix &Matrix::operator-=(double x) {
 }
 
 // operator-
-Matrix Matrix::operator-(const Matrix &m2) const {
+/*Matrix Matrix::operator-(const Matrix &m2) const {
+  if (_R != m2._R || _C != m2._C)
+    throw std::logic_error("Matrix dimensions must agree.");
   Matrix m(*this);
   m -= m2;
   return (m);
-}
+}*/
 
 Matrix Matrix::operator-(double x) const {
   Matrix m(*this);
@@ -124,26 +131,10 @@ Matrix &Matrix::operator*=(double x) {
   return (*this);
 }
 
-Matrix &Matrix::operator*=(const Matrix &m2) {
-  if (_C != m2._R)
-    throw std::logic_error("Matrix dimensions must agree.");
-  Matrix A(*this);
-  dgemm(A, m2, 'N', 'N', *this, 1, 0);
-  return (*this);
-}
-
 // operator*
 Matrix Matrix::operator*(double x) const {
   Matrix m(*this);
   m *= x;
-  return (m);
-}
-
-Matrix Matrix::operator*(const Matrix &m2) const {
-  if (_C != m2._R)
-    throw std::logic_error("Matrix dimensions must agree.");
-  Matrix m(*this);
-  m *= m2;
   return (m);
 }
 
@@ -277,76 +268,6 @@ void Matrix::chol(const char sign) {
   if (flag == 1)
     transpose();
 }
-
-// C<-a*A+b*B
-Matrix Matrix::dgemp(const Matrix &A, const Matrix &B, const double a,
-                     const double b) {
-  if (A._R != B._R || A._C != B._C)
-    throw std::logic_error("Matrix dimensions must agree.");
-  Matrix m(A._R, A._C);
-  for (int i = 0; i < A._R * A._C; i++) {
-    m._data[i] = a * A._data[i] + b * B._data[i];
-  }
-  return m;
-}
-
-// C<-a*A(')B(')+b*C
-void Matrix::dgemm(const Matrix &A, const Matrix &B, const char TransA,
-                   const char TransB, Matrix &C, const double a,
-                   const double b) {
-  Matrix At(A);
-  Matrix Bt(B);
-  if (TransA == 'T' || TransA == 't') {
-    At.transpose();
-  } else if (TransA != 'N' && TransA != 'n')
-    throw std::logic_error(
-        "Error mode.Transpose option of Matrix A must be 'N' or 'T'.");
-  if (TransB == 'T' || TransB == 't') {
-    Bt.transpose();
-  } else if (TransB != 'N' && TransB != 'n')
-    throw std::logic_error(
-        "Error mode.Transpose option of Matrix B must be 'N' or 'T'.");
-  if (A._C != B._R)
-    throw std::logic_error(
-        "Then dimensions of the Matrices are not suitable for product.");
-  C.resize(At._R, Bt._C);
-  for (int j = 0; j < _C; j++) {
-    for (int i = 0; i < _R; i++) {
-      double s = 0;
-      for (int k = 0; k < _C; k++)
-        s += At(i, k) * Bt(k, j);
-      C(i, j) = a * s + b * C(i, j);
-    }
-  }
-}
-
-//*this+=w*A(')B(')
-void Matrix::plusProductOf(const Matrix &A, const Matrix &B, const char TransA,
-                           const char TransB, const double w) {
-  dgemm(A, B, TransA, TransB, *this, w, 1);
-}
-
-//*this=A(')B(')
-void Matrix::isProductOf(const Matrix &A, const Matrix &B, const char TransA,
-                         const char TransB) {
-  dgemm(A, B, TransA, TransB, *this, 1, 0);
-}
-
-//*this+=w*A(')A(')
-void Matrix::plusSymmProductOf(const Matrix &A, const char TransA,
-                               const double w) {
-  Matrix At(A);
-  At.transpose();
-  dgemm(A, At, TransA, TransA, *this, w, 1);
-}
-
-//*this=A(')A(')
-void Matrix::isSymmProductOf(const Matrix &A, const char TransA) {
-  Matrix At(A);
-  At.transpose();
-  dgemm(A, At, TransA, TransA, *this, 1, 0);
-}
-
 // IO
 void Matrix::AsciiRead(const string filename) {
   std::ifstream in(filename);
@@ -430,3 +351,137 @@ int Matrix::totalMemory() {
   cout << "Current memory usage: " << total_m << " Byte\n";
   return total_m;
 }
+/***********************************************************/
+//developed based on OpenBLAS
+void Matrix::isSymmProductOf(const Matrix & A, char TransA){
+	//calculate size
+	if (TransA == 'N'||TransA == 'n') //A*A'
+	{
+		_C = A._R;
+		_R = A._R;
+		_data.resize(_C * _R);
+		f77blas_dgemm('N','T', A._R, A._R, A._C, 1.0, A._data.data(), A._R, A._data.data(), A._R, 0.0,_data.data(), _R);
+	}
+	else  //TransA == 'T', A'*A
+	{
+		_C = A._C;
+		_R = A._C;
+		_data.resize(_C * _R);
+		f77blas_dgemm('T','N', A._C, A._C, A._R, 1.0, A._data.data(), A._R, A._data.data(), A._R, 0.0,_data.data(), _R);
+	}		
+	
+}
+
+void Matrix::plusSymmProductOf(const Matrix & A, char TransA, double w){
+		if (TransA == 'N'||TransA == 'n') //A*A'
+	{
+		_C = A._R;
+		_R = A._R;
+		_data.resize(_C * _R);
+		f77blas_dgemm('N','T', A._R, A._R, A._C, w, A._data.data(), A._R, A._data.data(), A._R, 1.0,_data.data(), _R);
+	}
+	else  //TransA == 'T', A'*A
+	{
+		_C = A._C;
+		_R = A._C;
+		_data.resize(_C * _R);
+		f77blas_dgemm('T','N', A._C, A._C, A._R, w, A._data.data(), A._R, A._data.data(), A._R, 1.0,_data.data(), _R);
+	}
+}
+
+void Matrix::isProductOf(const Matrix & A, const Matrix & B, char transA, char transB){
+	int k;
+	if (transA =='N' || transA == 'n')
+	{	_R = A._R;
+		k = A._C;
+		}
+	else {
+		_R = A._C;
+		k = A._R;
+	}
+	
+	if (transB =='N' || transB == 'n')
+		_C = B._C;
+	else
+		_C = B._R;
+	
+	_data.resize( _C * _R);
+	
+	f77blas_dgemm(transA, transB, _R, _C, k, 1.0, A._data.data(), A._R, B._data.data(), B._R, 0.0,_data.data(), _R);		
+}
+void Matrix::plusProductOf(const Matrix & A, const Matrix & B, char transA, char transB, double w){
+	int k;
+	if (transA =='N' || transA == 'n')
+	{	_R = A._R;
+		k = A._C;
+		}
+	else {
+		_R = A._C;
+		k = A._R;
+	}
+	
+	if (transB =='N' || transB == 'n')
+		_C = B._C;
+	else
+		_C = B._R;
+	
+	_data.resize( _C * _R);
+	
+	f77blas_dgemm(transA, transB, _R, _C, k, w, A._data.data(), A._R, B._data.data(), B._R, 1.0,_data.data(), _R);		
+}
+
+Matrix Matrix::operator*(const Matrix &A) const {
+  Matrix m(_R, A._C); 
+  m.isProductOf(*this, A, 'N','N');	
+  return (m);
+}
+
+Matrix &Matrix::operator*=(const Matrix &A) {
+  Matrix m(_R, A._C); 
+  m.isProductOf(*this, A, 'N','N');	
+  //(*this).plusProductOf(*this, A, 'N', 'N', 1.0);
+  *this = m;
+  return (*this);
+}
+
+  Matrix Matrix::operator+(const Matrix &A) const{
+	  //check size
+	  if ((A._C != _C) ||(A._R != _R))
+		  throw std::logic_error("Matrix dimensions must agree.");
+	  Matrix m;	  
+	  m.identity(A._C); 
+	  Matrix n(*this);
+	  n.plusProductOf(A, m, 'N','N', 1.0);
+	  return n;
+	  
+  }
+  Matrix &Matrix::operator+=(const Matrix &A){
+	  if ((A._C != _C) ||(A._R != _R))
+		  throw std::logic_error("Matrix dimensions must agree.");
+	  Matrix m;	  
+	  m.identity(A._C); 
+	  (*this).plusProductOf(A, m, 'N','N', 1.0);
+	  return (*this);
+  }
+  Matrix Matrix::operator-(const Matrix &A) const{
+	  //check size
+	  if ((A._C != _C) ||(A._R != _R))
+		  throw std::logic_error("Matrix dimensions must agree.");
+	  Matrix m;	  
+	  m.identity(A._C); 
+	  Matrix n(*this);
+	  n.plusProductOf(A, m, 'N','N', -1.0);
+	  return n; 
+  }
+  Matrix &Matrix::operator-=(const Matrix &A){
+	   if ((A._C != _C) ||(A._R != _R))
+		  throw std::logic_error("Matrix dimensions must agree.");
+	  Matrix m;	  
+	  m.identity(A._C); 
+	  (*this).plusProductOf(A, m, 'N','N', -1.0);
+	  return (*this); 
+  }
+
+
+
+
