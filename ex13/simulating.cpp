@@ -1,15 +1,19 @@
 #include "Fourierseries.hpp"
 #include "Matrix.hpp"
 #include <iostream>
+#include <vector>
+#include <algorithm>
+
 int main() {
   double omega0 = 0.5;
   double sigma = 1;
   int N = 1000;
+  int n_max = 200;
   Matrix t;
   A.AsciiRead("control_points.txt");
   Matrix x; // coefficients
   x.AsciiRead("true_para.txt");
-  Fourierseries Fourier(200, omega0, x);
+  Fourierseries Fourier(n_max, omega0, x);
   Matrix L;
   Fourier.getFunctionalValues(t, L);
   L.AsciiWrite("true_observ.txt");

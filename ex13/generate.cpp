@@ -1,4 +1,3 @@
-#include "Fourierseries.hpp"
 #include "Matrix.hpp"
 #include <iostream>
 #include <random>
@@ -15,7 +14,11 @@ int main() {
     A(i, 0) = aUniDist(myBasicGenerator);
   A.Asciiwrite("control_points.txt");
   int n_max = 200;
-  double w = 0.5;
-  Fourierseries Fourier(n_max, w);
-  //
+  Matrix x(2*n_max+1, 1);
+  for (int j = 0; j<2*n_max+1; j++)
+	  x(j,0) = aUniDist(myBasicGenerator);
+  x.Asciiwrite("true_para.txt");
+  //double w = 0.5;
+  //Fourierseries Fourier(n_max, w);
+  
 }
