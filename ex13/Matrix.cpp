@@ -228,7 +228,7 @@ void Matrix::identity(const int size) {
   for (int i = 0; i < size; i++)
     _data[_R * i + i] = 1;
 }
-/*
+
 void Matrix::chol(const char sign) {
   // if neither 'U' nor 'L', error
   int flag;
@@ -269,24 +269,19 @@ void Matrix::chol(const char sign) {
   if (flag == 1)
     transpose();
 }
-*/
 
-void Matrix::chol(const char sign) {
-  int st;
+
+void Matrix::chol() {
   /*
   Array2D<double> A(_R,_C,0);
   for(int j = 0; j< _C; i++){
      for(int i = 0; i< _R; j++)
              A[i][j]=_data[j*_C+i];
   }*/
-  if (sign == 'U' || sign == 'u')
-    f90lapack_dpotrf(sign, _R, _data, _R, st);
-  else if (sign == 'L' || sign == 'l')
-    f90lapack_dpotrf(sign, _C, _data, _C, st);
-  else
-    throw std::logic_error("Error using chol. Option must be 'U' or 'L'.");
   if (_R != _C)
     throw std::logic_error("Error using chol. Matrix must be square");
+  int st;
+  f90lapack_dpotrf(sign, _R, _data, _R, st);
   if (st != 0)
     throw std::logic_error(
         "Error using chol. Matrix must be positive definite.");
