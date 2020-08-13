@@ -38,10 +38,10 @@ public:
   // Algorithm
   void transpose();
   void identity(const int size); // generate size*size identity matrix(for test)
-  
+
   // developed based on LAPACK
   void chol(const char sign = 'U'); // default same as Matlab
-  void solveWithCholReduced(Matrix & R);
+  void solveWithCholReduced(Matrix &R);
   void invCholReduced();
   // IO
   void AsciiRead(const std::string filename);

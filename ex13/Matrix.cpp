@@ -277,7 +277,7 @@ void Matrix::chol(const char sign) {
   Array2D<double> A(_R,_C,0);
   for(int j = 0; j< _C; i++){
      for(int i = 0; i< _R; j++)
-	     A[i][j]=_data[j*_C+i];
+             A[i][j]=_data[j*_C+i];
   }*/
   if (sign == 'U' || sign == 'u')
     f90lapack_dpotrf(sign, _R, _data, _R, st);
@@ -287,25 +287,25 @@ void Matrix::chol(const char sign) {
     throw std::logic_error("Error using chol. Option must be 'U' or 'L'.");
   if (_R != _C)
     throw std::logic_error("Error using chol. Matrix must be square");
-  if(st !=0)
-	  throw std::logic_error(
-              "Error using chol. Matrix must be positive definite.");
+  if (st != 0)
+    throw std::logic_error(
+        "Error using chol. Matrix must be positive definite.");
 }
 
-void Matrix::solveWithCholReduced(Matrix & R){
+void Matrix::solveWithCholReduced(Matrix &R) {
   int st;
   f90lapack_dposv('U', _R, _C, R._data, R._R, _data, _R, st);
-  if(st !=0)
-          throw std::logic_error(
-              "Error using chol. Matrix must be positive definite.");
-
+  if (st != 0)
+    throw std::logic_error(
+        "Error using chol. Matrix must be positive definite.");
 }
 
-void Matrix::invCholReduced(){
+void Matrix::invCholReduced() {
   int st;
   f90lapack_dpotri('U', _R, _data, _R, st);
-  if(st<!=0)
-          throw std::logic_error("The element of upper triangle is 0, the inverse could not be computed.");
+  if (st < != 0)
+    throw std::logic_error("The element of upper triangle is 0, the inverse "
+                           "could not be computed.");
 }
 // IO
 void Matrix::AsciiRead(const string filename) {
