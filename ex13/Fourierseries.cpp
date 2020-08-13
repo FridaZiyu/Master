@@ -25,7 +25,7 @@ void Fourierseries::getFunctionalValues(const Matrix &t, Matrix &l) {
   double w = _omega;
   l.resize(t.get_rows(), 1);
   for (int i = 0; i < t.get_rows(); i++) {
-    double s = _coef(0, 0);
+    double s = _coef(0, 0) / 2.0;
     for (int k = 1; k <= n; k++) {
       s += _coef(k, 0) * cos(w * k * t(i, 0)) +
            _coef(1 + 2 * k, 0) * sin(w * k * t(i, 0));
