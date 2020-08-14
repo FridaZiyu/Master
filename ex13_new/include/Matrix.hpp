@@ -34,18 +34,18 @@ public:
   double min() const;
   double max(int &r, int &c) const;
   double min(int &r, int &c) const;
-  
+
   // IO
   void AsciiRead(const std::string filename);
   void AsciiWrite(const std::string filename);
   void BinaryRead(const std::string filename);
   void BinaryWrite(const std::string filename);
   void print() const; // print
-  
+
   // Algorithm
   void transpose();
   void identity(const int size); // generate size*size identity matrix(for test)
-  
+
   // developed based on OpenBLAS
   void isSymmProductOf(const Matrix &A, char TransA);
   void plusSymmProductOf(const Matrix &A, char TransA, double w = 1.0);
@@ -58,14 +58,15 @@ public:
   Matrix operator+(const Matrix &anotherMatrix) const;
   Matrix &operator+=(const Matrix &anotherMatrix);
   Matrix operator-(const Matrix &anotherMatrix) const;
-  Matrix &operator-=(const Matrix &anotherMatrix);  
+  Matrix &operator-=(const Matrix &anotherMatrix);
   // developed based on LAPACK
   void chol();
-  void solveWithCholReduced( Matrix & R );
-  void invCholReduced( );
-  
+  void solveWithCholReduced(Matrix &R);
+  void invCholReduced();
+
   // static func.
   static int totalMemory();
+
 private:
   int _R = 0;
   int _C = 0;

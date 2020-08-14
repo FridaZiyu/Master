@@ -24,8 +24,8 @@ void Fourierseries::getFunctionalValues(const Matrix &t, Matrix &l) {
   for (int i = 0; i < t.rows(); i++) {
     double s = _coef(0, 0) / 2;
     for (int k = 1; k <= n; k++) {
-      s += _coef(2 * k - 1 , 0) * cos(w * k * t(i, 0)) +
-           _coef( 2 * k, 0) * sin(w * k * t(i, 0));
+      s += _coef(2 * k - 1, 0) * cos(w * k * t(i, 0)) +
+           _coef(2 * k, 0) * sin(w * k * t(i, 0));
     }
     l(i, 0) = s;
   }
@@ -35,7 +35,7 @@ void Fourierseries::getDesignMatrix(const Matrix &t, Matrix &A) {
   int n = _degree;
   double w = _omega;
   for (int i = 0; i < t.rows(); i++) {
-    A(0, i) = 0.5; 
+    A(0, i) = 0.5;
     for (int k = 1; k <= n; k++) {
       A(2 * k - 1, i) = cos(w * k * t(i, 0));
       A(2 * k, i) = sin(w * k * t(i, 0));

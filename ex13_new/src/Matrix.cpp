@@ -486,20 +486,21 @@ Matrix &Matrix::operator-=(const Matrix &A) {
   return (*this);
 }
 
-void Matrix::chol(){
-	int stat;
-	f77blas_dpotrf( 'U', _R, _data.data(), _R, stat);
-	if (stat != 0)
-		throw std::logic_error("Error using chol. Matrix must be positive definite.");		
+void Matrix::chol() {
+  int stat;
+  f77blas_dpotrf('U', _R, _data.data(), _R, stat);
+  if (stat != 0)
+    throw std::logic_error(
+        "Error using chol. Matrix must be positive definite.");
 }
-void Matrix::solveWithCholReduced( Matrix & R ){
-	f77blas_dtrsm( 'L', 'U', 'T', 'N', _R, _C, 1.0, R._data.data(), R._R, _data.data(), _R);
-	f77blas_dtrsm('L', 'U', 'N', 'N', _R, _C, 1.0, R._data.data(), R._R, _data.data(), _R);	
+void Matrix::solveWithCholReduced(Matrix &R) {
+  f77blas_dtrsm('L', 'U', 'T', 'N', _R, _C, 1.0, R._data.data(), R._R,
+                _data.data(), _R);
+  f77blas_dtrsm('L', 'U', 'N', 'N', _R, _C, 1.0, R._data.data(), R._R,
+                _data.data(), _R);
 }
-void Matrix::invCholReduced( ){
-	Matrix R(*this);
-	identity( _R );
-	solveWithCholReduced( R );
+void Matrix::invCholReduced() {
+  Matrix R(*this);
+  identity(_R);
+  solveWithCholReduced(R);
 }
-
-
